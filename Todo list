@@ -1,0 +1,109 @@
+# Importing the tkinter library and its messagebox module.
+import tkinter as tk
+from tkinter import messagebox
+
+#Define a class Todolist with an __init__ method, which is the constructor
+class Todolist:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Todo List")      # Setting its title to "Todo List".
+       
+        # Intilaising the task 
+        self.tasks = []
+
+        self.task_entry = tk.Entry(root, width=50)                      #  task can be upto 70 characters
+        self.task_entry.grid(row=0, column=0, padx=25, pady=5)           # Dimenssion of entry block 
+
+             
+        # Creating a buuton to add task
+        add_task_button = tk.Button(root, text="Add Task", command=self.add_task)
+        add_task_button.grid(row=0, column=1, padx=25, pady=5)       # Dimenssion
+        
+        #  Creating a listbox
+        self.task_listbox = tk.Listbox(root, width=50, height=10)
+        self.task_listbox.grid(row=1, column=0, padx=25, pady=5)
+        self.task_listbox.bind(" Delete ", self.delete_task_key)              # delete key
+
+        
+        # Task Completed mark button
+        mark_completed_button = tk.Button(root, text="Mark Completed", command=self.mark_completed)
+        mark_completed_button.grid(row=2, column=0, padx=25, pady=5)
+        # Task delete button
+        delete_task_button = tk.Button(root, text="Delete Task", command=self.delete_task)
+        delete_task_button.grid(row=2, column=1, padx=25, pady=5)
+         #Task updation button
+        update_task_button = tk.Button(root, text="Update Task", command=self.update_task)
+        update_task_button.grid(row=2, column=2,  padx=25, pady=5)
+
+        # calling load task function
+        self.load_tasks()
+       
+    
+     #line defines a new method called add_task with self  as a parameter
+    def add_task(self):
+        task = self.task_entry.get()
+        if task:
+            self.tasks.append({"task": task, "completed": False})
+            self.task_listbox.insert(tk.END, task)              # inserting a task
+            self.task_entry.delete(0, tk.END)                   #deleting a task
+    
+    
+     #line defines a new method called mark_completed with self 
+    def mark_completed(self):
+        try:
+            selected_task_index = self.task_listbox.curselection()[0]
+            self.tasks[selected_task_index]["completed"] = True
+            self.task_listbox.itemconfig(selected_task_index, {'fg': 'green'})
+        except IndexError:
+            messagebox.showwarning("Warning", "No task selected.")
+    
+    
+    #line defines a new method called delete_task with self 
+    def delete_task(self):
+        try:
+            selected_task_index = self.task_listbox.curselection()[0]
+            self.task_listbox.delete(selected_task_index)
+            del self.tasks[selected_task_index]
+        except IndexError:
+            messagebox.showwarning("Warning", "No task selected.")
+            
+
+    def delete_task_key(self, event):
+        self.delete_task()
+   
+   
+    #line defines a new method called update_task with self 
+    def update_task(self):
+        try:
+            selected_task_index = self.task_listbox.curselection()[0]
+            new_task = self.task_entry.get()
+            if new_task:
+                self.tasks[selected_task_index]["task"] = new_task
+                self.task_listbox.delete(selected_task_index)
+                self.task_listbox.insert(selected_task_index, new_task)
+                self.task_entry.delete(0, tk.END)
+        except IndexError:
+            messagebox.showwarning("Warning", "No task selected.")
+    
+    
+    #line defines a new method called load_task with self 
+    def load_tasks(self):
+        # For demonstration,  dummy tasks
+        self.tasks = [
+            {"task": "PYTHON", "completed": False},
+            {"task": "INTERNSHIP", "completed": True},
+            {"task": "TASK 2", "completed": False}
+        ]
+
+        for task in self.tasks:
+            self.task_listbox.insert(tk.END, task["task"])
+
+# The main_gui function creates the main window (Root)
+def main_gui():
+    root = tk.Tk()                 # an instance of the Todolist class
+    app = Todolist(root)
+    root.mainloop()                #starts the main event loop
+
+ # calls the main_gui function   
+if __name__ == "__main__":
+    main_gui()
