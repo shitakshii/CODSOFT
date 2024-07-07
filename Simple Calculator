@@ -1,0 +1,76 @@
+# importing messagebox from tkinter
+import tkinter as tk
+from tkinter import messagebox
+
+# Functions for arithmetic operations
+def add(x, y):
+    return x + y
+
+def subtract(x, y):
+    return x - y
+
+def multiply(x, y):
+    return x * y
+
+def divide(x, y):
+    if y == 0:
+        return "Error! Division by zero."
+    else:
+        return x / y
+
+# Function to perform the selected operation
+def calculate():
+    try:
+        num1 = float(entry1.get())
+        num2 = float(entry2.get())
+        operation = var.get()
+        
+        if operation == 'Add':
+            result = add(num1, num2)
+        elif operation == 'Subtract':
+            result = subtract(num1, num2)
+        elif operation == 'Multiply':
+            result = multiply(num1, num2)
+        elif operation == 'Divide':
+            result = divide(num1, num2)
+        
+        label_result.config(text=f"Result: {result}")
+    except ValueError:
+        messagebox.showerror("Input Error", "Please enter valid numbers")
+
+# Create the main window
+window = tk.Tk()
+window.title("Simple Calculator")
+
+# Create and place widgets
+label1 = tk.Label(window, text="Enter first number:")
+label1.grid(row=0, column=0)
+
+entry1 = tk.Entry(window)
+entry1.grid(row=0, column=1)
+
+label2 = tk.Label(window, text="Enter second number:")
+label2.grid(row=1, column=0)
+
+entry2 = tk.Entry(window)
+entry2.grid(row=1, column=1)
+
+var = tk.StringVar(window)
+var.set("Operation") # default value
+
+label3 = tk.Label(window, text="Select operation:")
+label3.grid(row=2, column=0)
+
+
+option_menu = tk.OptionMenu(window, var, "Add", "Subtract", "Multiply", "Divide")
+option_menu.grid(row=2, column=1,columnspan=2)
+
+
+button_calculate = tk.Button(window, text="Calculate", command=calculate)
+button_calculate.grid(row=4, column=0, columnspan=2)
+
+label_result = tk.Label(window, text="Result:")
+label_result.grid(row=7, column=0, columnspan=3)
+
+# Run the GUI event loop
+window.mainloop()
